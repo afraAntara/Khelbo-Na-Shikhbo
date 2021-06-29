@@ -1,0 +1,1441 @@
+.MODEL SMALL
+ 
+.STACK 100H
+
+.DATA 
+T DB '                   KHELBO NA SHIKHBO         $' 
+MSG1 DB '                     ...WELCOME...            $'
+MSG2 DB '     Rules :$'
+MSG3 DB '     1)For every correct answer you will get 1(one) point.$'
+MSG4 DB '     2)For every wrong answer 1(one)point will be deducted from total point(s).$'
+MSG5 DB '           PRESS ENTER to START the session $'
+MSG6 DB '       YAHOO!!Right answer...$'
+MSG7 DB '       OOOPS!!Wrong answer...$'
+MSG8 DB '       **You are succesfully done with this session.**$'
+MSG9 DB '       Your total obtained point is: $'
+MSG10 DB '        PRESS 1 to re-attempt the session or 0 to EXIT...$'
+MSG11 DB '     3)BE CAREFUL!!!$'
+MSG12 DB '     Because you will only get 3 chances to give WRONG answer in a session.$'
+MSG13 DB '        WARNING!!!!!You have only $'
+MSG14 DB 'chance(s) left.$'
+MSG15 DB '        Sorry...You need more preparation.$'
+MSG16 DB '  Answer: $'  
+MSG17 DB '        You gave Right Answer $'
+MSG18 DB ' & Wrong Answer $'
+MSG19 DB '10$' 
+MSG20 DB '                  xxx THANK YOU xxx $'
+
+Q1 DB '     1. Which planet is known as the Red Planet?$'
+QA1 DB '            (a) Mars (b) Jupiter (c) Venus     $' 
+Q2 DB "     2. What is a baby frog called?$"
+QA2 DB '            (a) Piglet (b) Tadpole (c) Toad    $'
+Q3 DB "     3. Which animal is known as the Ship of the Desert?$"
+QA3 DB '            (a) Addax (b) Camel (c) Fennec Fox$'
+Q4 DB '     4. What type of whale is the biggest animal in the world?$'
+QA4 DB '            (a) Killer Whale (b) Blue Whale (c) Fin Whale $'
+Q5 DB '     5. How many rings are on the Olympic flag?$'
+QA5 DB '            (a) 5 (b) 7 (c) None $'
+Q6 DB '     6. Which planet is the smallest?$'
+QA6 DB '            (a) Neptune (b) Mars (c) Mercury$'
+Q7 DB '     7. Which first electrical item did Thomas Edison invent?$'
+QA7 DB '            (a) Relay (b) Lightbulb (c) Battery$'
+Q8 DB "     8. What is another word for a 'lexicon'?$"
+QA8 DB '            (a) Album (b) Biography (c) Dictionary$'
+Q9 DB '     9. How many cards are there in a complete pack of cards?$'
+QA9 DB '            (a)52 (b)28 (c)42  $'
+Q10 DB '     10. Which is the tallest mountain in the world?$'
+QA10 DB '            (a)Mount Everest (b)Makalu (c)Mount Fuji$' 
+
+Q11 DB '     1. What is the name given to an animal that only eats plants?$'
+QA11 DB '            (a) Herbivore (b) Omnivore (c) Carnivore $' 
+Q12 DB "     2. What is the square root of 144?$"
+QA12 DB '            (a) 13 (b) 12 (c) 9    $'
+Q13 DB "     3. What is the 15th letter of the English alphabet?$"
+QA13 DB '            (a) H (b) O (c) P$'
+Q14 DB '     4. How many teeth should an adult have including their wisdom teeth?$'
+QA14 DB '            (a) 36 (b) 32 (c) 28 $'
+Q15 DB '     5. How many days are there in June?$'
+QA15 DB '            (a) 30 days (b) 31 days (c) 29 days $'
+Q16 DB '     6. How many players are there in an ice hockey team?$'
+QA16 DB '            (a) 10 (b) 8 (c) 6$'
+Q17 DB '     7. What is the smallest ocean in the world?$'
+QA17 DB '            (a) Atlantic (b) Arctic (c) Pacific$'
+Q18 DB "     8. How many planets are there in our solar system?$"
+QA18 DB '            (a) 5 (b) 9 (c) 8$'
+Q19 DB '     9. 1,8,27,X,125. X= ?$'
+QA19 DB '            (a) 64 (b) 72 (c) 32  $'
+Q20 DB "     10. Which Saint's Day is celebrated on 14th February?$"
+QA20 DB '            (a) St. Valentine (b) St. John Neumann (c) St. Frances Xavier$' 
+
+
+C DB 0H
+R DB 0H 
+W DB 0H
+S DW 0H
+H DB 0H
+
+.CODE 
+MAIN PROC 
+
+;iniitialize DS
+
+MOV AX,@DATA 
+MOV DS,AX 
+ 
+; enter your code here 
+
+MOV AH,6H
+MOV AL,00H
+MOV BH,11100001B
+
+MOV CH,0
+MOV CL,0
+MOV DH,80
+MOV DL,80
+INT 10H  
+               
+
+CALL NL
+CALL NL
+
+LEA DX,T
+MOV AH,9
+INT 21H
+
+CALL NL
+CALL NL
+
+LEA DX, MSG1
+MOV AH,9
+INT 21H
+
+CALL NL
+
+LEA DX, MSG2
+MOV AH,9
+INT 21H
+
+CALL NL
+
+LEA DX, MSG3
+MOV AH,9
+INT 21H  
+
+CALL NL 
+
+LEA DX, MSG4
+MOV AH,9
+INT 21H  
+
+CALL NL
+
+LEA DX, MSG11
+MOV AH,9
+INT 21H 
+
+CALL NL
+
+LEA DX, MSG12
+MOV AH,9
+INT 21H   
+
+START: 
+
+MOV C,0H 
+MOV R,0H
+MOV W,0H
+
+MOV BL,0
+CALL NL
+
+LEA DX, MSG5
+MOV AH,9
+INT 21H
+
+MOV AH,1
+INT 21H
+
+CMP AL, 0DH
+JE SESSION
+JNE START
+
+SESSION:
+INC S 
+MOV AX,S
+MOV CL,2H
+DIV CL
+
+CMP AH,0H
+JE QSN11
+JNE QSN1  
+
+;SESSION1
+
+QSN1:   
+CALL NL
+CALL NL
+CALL NL
+
+;LEA DX,Q1
+;MOV AH,9
+;INT 21H
+
+;CALL NL
+
+;LEA DX,QA1
+;MOV AH,9
+;INT 21H
+
+;CALL NL
+
+;MOV AH,1
+;INT 21H 
+
+CALL QN1
+
+CALL INPUT
+
+
+CMP AL, 'a'
+JE QSN2
+JNE QSNW2
+          
+QSN2:    
+INC R
+
+CALL NL 
+CALL NL  
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN2
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN3
+JNE QSNW3 
+
+QSNW2:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN2
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN3
+JNE QSNW3
+
+QSN3:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN3
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN4
+JNE QSNW4 
+
+QSNW3:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN3
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN4
+JNE QSNW4  
+
+QSN4:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN4
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN5
+JNE QSNW5 
+
+QSNW4:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN4
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN5
+JNE QSNW5
+
+QSN5:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN5
+
+CALL INPUT
+
+CMP AL,'a'
+JE QSN6
+JNE QSNW6 
+
+QSNW5:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN5
+CALL INPUT
+
+CMP AL, 'a'
+JE QSN6
+JNE QSNW6
+
+QSN6:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN6
+
+CALL INPUT
+
+CMP AL,'c'
+JE QSN7
+JNE QSNW7 
+
+QSNW6:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN6
+CALL INPUT
+
+CMP AL, 'c'
+JE QSN7
+JNE QSNW7
+
+QSN7:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN7
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN8
+JNE QSNW8 
+
+QSNW7:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN7
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN8
+JNE QSNW8
+
+QSN8:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN8
+
+CALL INPUT
+
+CMP AL,'c'
+JE QSN9
+JNE QSNW9 
+
+QSNW8:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN8
+CALL INPUT
+
+CMP AL, 'c'
+JE QSN9
+JNE QSNW9
+
+QSN9:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN9
+
+CALL INPUT
+
+CMP AL,'a'
+JE QSN10
+JNE QSNW10 
+
+QSNW9:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN9
+CALL INPUT
+
+CMP AL, 'a'
+JE QSN10
+JNE QSNW10                      
+
+QSN10:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN10
+CALL INPUT
+
+CMP AL, 'a'
+JE EXITR
+JNE EXITW
+
+QSNW10:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN10
+CALL INPUT
+
+CMP AL, 'a'
+JE EXITR
+JNE EXITW 
+
+;SESSION2
+      
+QSN11:   
+CALL NL
+CALL NL
+CALL NL 
+
+CALL QN11
+
+CALL INPUT
+
+
+CMP AL, 'a'
+JE QSN12
+JNE QSNW12
+          
+QSN12:    
+INC R
+
+CALL NL 
+CALL NL  
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN12
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN13
+JNE QSNW13 
+
+QSNW12:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN12
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN13
+JNE QSNW13
+
+QSN13:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN13
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN14
+JNE QSNW14 
+
+QSNW13:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN13
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN14
+JNE QSNW14  
+
+QSN14:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN14
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN15
+JNE QSNW15 
+
+QSNW14:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN14
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN15
+JNE QSNW15
+
+QSN15:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN15
+
+CALL INPUT
+
+CMP AL,'a'
+JE QSN16
+JNE QSNW16 
+
+QSNW15:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN15
+CALL INPUT
+
+CMP AL, 'a'
+JE QSN16
+JNE QSNW16
+
+QSN16:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN16
+
+CALL INPUT
+
+CMP AL,'c'
+JE QSN17
+JNE QSNW17 
+
+QSNW16:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN16
+CALL INPUT
+
+CMP AL, 'c'
+JE QSN17
+JNE QSNW17
+
+QSN17:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN17
+
+CALL INPUT
+
+CMP AL,'b'
+JE QSN18
+JNE QSNW18 
+
+QSNW17:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN17
+CALL INPUT
+
+CMP AL, 'b'
+JE QSN18
+JNE QSNW18
+
+QSN18:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN18
+
+CALL INPUT
+
+CMP AL,'c'
+JE QSN19
+JNE QSNW19 
+
+QSNW18:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN18
+CALL INPUT
+
+CMP AL, 'c'
+JE QSN19
+JNE QSNW19
+
+QSN19:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN19
+
+CALL INPUT
+
+CMP AL,'a'
+JE QSN20
+JNE QSNW20 
+
+QSNW19:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN19
+CALL INPUT
+
+CMP AL, 'a'
+JE QSN20
+JNE QSNW20                      
+
+QSN20:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+
+CALL QN20
+CALL INPUT
+
+CMP AL, 'a'
+JE EXITR
+JNE EXITW
+
+QSNW20:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL 
+CALL Check
+CALL NL
+
+CALL QN20
+CALL INPUT
+
+CMP AL, 'a'
+JE EXITR
+JNE EXITW
+      
+      
+;COMMON PART
+
+EXITR:
+INC R
+
+CALL NL 
+CALL NL 
+
+LEA DX, MSG6
+MOV AH,9
+INT 21H
+
+INC BL
+CALL NL
+CALL NL
+
+LEA DX, MSG8
+MOV AH,9
+INT 21H
+
+CALL NL
+CALL COUNT
+CALL NL
+
+LEA DX, MSG9
+MOV AH,9
+INT 21H
+
+ADD BL,48
+
+CMP BL,57
+JG TEN
+MOV AH,2
+MOV DL,BL
+INT 21H
+JMP EXIT1 
+
+EXITW:
+INC W
+
+CALL NL 
+CALL NL 
+
+LEA DX,MSG7
+MOV AH,9
+INT 21H
+
+DEC BL
+CALL NL
+CALL NL
+
+LEA DX,MSG8
+MOV AH,9
+INT 21H 
+
+Check2:
+
+CALL NL
+CALL COUNT
+CALL NL
+
+LEA DX,MSG9
+MOV AH,9
+INT 21H
+
+ADD BL,48
+MOV AH,2
+MOV DL,BL
+INT 21H
+
+JMP EXIT1 
+
+COUNT:
+
+CALL NL
+
+LEA DX,MSG17
+MOV AH,9
+INT 21H 
+
+CMP R,0AH
+JE P10 
+
+MOV AH,2
+MOV DL,30H
+ADD DL,R
+INT 21H 
+
+AP10:
+
+LEA DX,MSG18
+MOV AH,9
+INT 21H
+
+MOV AH,2
+MOV DL,30H
+ADD DL,W
+INT 21H
+
+CALL NL
+
+RET 
+
+P10:
+
+
+LEA DX,MSG19
+MOV AH,9
+INT 21H 
+
+JMP AP10
+
+
+TEN:
+MOV AH,2
+MOV DL,"1"
+INT 21H
+MOV DL,"0"
+INT 21H
+JMP EXIT1
+
+NL:
+MOV AH,2
+MOV DL,0AH
+INT 21H
+MOV DL,0DH
+INT 21H 
+RET
+
+;QUESTION PART
+
+QN1:
+LEA DX,Q1
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA1
+MOV AH,9
+INT 21H
+RET
+
+
+QN2:
+LEA DX,Q2
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA2
+MOV AH,9
+INT 21H
+RET 
+
+QN3:
+LEA DX,Q3
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA3
+MOV AH,9
+INT 21H
+RET   
+
+QN4:
+LEA DX,Q4
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA4
+MOV AH,9
+INT 21H
+RET
+
+QN5:
+LEA DX,Q5
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA5
+MOV AH,9
+INT 21H
+RET 
+
+QN6:
+LEA DX,Q6
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA6
+MOV AH,9
+INT 21H
+RET
+
+QN7:
+LEA DX,Q7
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA7
+MOV AH,9
+INT 21H
+RET  
+
+QN8:
+LEA DX,Q8
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA8
+MOV AH,9
+INT 21H
+RET 
+
+QN9:
+LEA DX,Q9
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA9
+MOV AH,9
+INT 21H
+RET   
+
+QN10:
+LEA DX,Q10
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA10
+MOV AH,9
+INT 21H
+RET
+
+QN11:
+LEA DX,Q11
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA11
+MOV AH,9
+INT 21H
+RET
+
+
+QN12:
+LEA DX,Q12
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA12
+MOV AH,9
+INT 21H
+RET 
+
+QN13:
+LEA DX,Q13
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA13
+MOV AH,9
+INT 21H
+RET   
+
+QN14:
+LEA DX,Q14
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA14
+MOV AH,9
+INT 21H
+RET
+
+QN15:
+LEA DX,Q15
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA15
+MOV AH,9
+INT 21H
+RET 
+
+QN16:
+LEA DX,Q16
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA16
+MOV AH,9
+INT 21H
+RET
+
+QN17:
+LEA DX,Q17
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA17
+MOV AH,9
+INT 21H
+RET  
+
+QN18:
+LEA DX,Q18
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA18
+MOV AH,9
+INT 21H
+RET 
+
+QN19:
+LEA DX,Q19
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA19
+MOV AH,9
+INT 21H
+RET   
+
+QN20:
+LEA DX,Q20
+MOV AH, 9
+INT 21H  
+
+CALL NL 
+
+LEA DX,QA20
+MOV AH,9
+INT 21H
+RET 
+
+Check: 
+INC C
+CMP C,3H
+JE Check1 
+
+CALL NL
+CALL NL 
+
+LEA DX,MSG13
+MOV AH,9
+INT 21H     
+
+MOV AH,2
+MOV DL,33H
+SUB DL,C
+INT 21H
+
+LEA DX,MSG14
+MOV AH,9
+INT 21H
+
+CALL NL
+
+RET   
+
+T0:
+MOV BL,0H
+JMP C1  
+
+Check1: 
+
+CMP R,3H
+JLE T0 
+
+C1:
+
+CALL NL    
+CALL NL
+
+LEA DX,MSG15
+MOV AH,9
+INT 21H
+
+JMP Check2               
+
+INPUT:
+CALL NL
+
+LEA DX,MSG16
+MOV AH,9
+INT 21H
+
+MOV AH,1
+INT 21H
+RET
+
+EXIT1:
+CALL NL
+CALL NL
+
+LEA DX,MSG10
+MOV AH,9
+INT 21H
+
+MOV AH,1
+INT 21H
+
+CMP AL,'1'
+JE START
+
+CALL NL
+CALL NL 
+
+LEA DX,MSG20
+MOV AH,9
+INT 21H
+
+
+;exit to DOS 
+               
+MOV AX,4C00H
+INT 21H 
+
+MAIN ENDP
+    END MAIN 
+  
+
+;exit to DOS 
+               
+MOV AX,4C00H
+INT 21H 
+
+MAIN ENDP
+    END MAIN 
+  
